@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anniversary 4 Month</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: white;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .intro-text {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            padding: 2rem;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .intro-text.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-out {
+            animation: fadeOut 1s ease-in-out forwards;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fdf2f8, #fcf7ff);
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px rgba(219, 39, 119, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .title {
+            color: #db2777;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(219, 39, 119, 0.2);
+            animation: titlePulse 2s infinite;
+        }
+
+        @keyframes titlePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .time-count {
+            font-size: 1.8rem;
+            color: #4b5563;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #db2777, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.1);
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 85%;
+            max-width: 700px;
+            height: 450px;
+            margin: 0 auto 3rem auto;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .slideshow-container:hover {
+            transform: scale(1.02);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            transform: scale(1.1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 1.5rem;
+        }
+
+        .slide-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .slide-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .gift-section {
+            background: linear-gradient(135deg, #fff5f7, #fdf2f8);
+            padding: 3rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gift-title {
+            color: #db2777;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .gift-button {
+            background: linear-gradient(45deg, #db2777, #ec4899);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(219, 39, 119, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gift-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .gift-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .gift-popup {
+            background: white;
+            padding: 3rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            max-width: 90%;
+            width: 450px;
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5) translateY(100px); opacity: 0; }
+            70% { transform: scale(1.1) translateY(-10px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 24px;
+            color: rgba(219, 39, 119, 0.4);
+            pointer-events: none;
+            animation: float 8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(-50%) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-100px) translateX(50%) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-overlay">
+        <div class="intro-text">อ้วนนนนนนนนนนนนนนนนนนนน</div>
+    </div>
+    <div class="hearts"></div>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">💖 Anniversary 4 Month 💖</h1>
+            <div class="time-count">
+                <div id="time-counter"></div>
+            </div>
+            <div class="start-date">
+                เริ่มต้นความรักของเราตั้งแต่วันที่ 29 มิถุนายน 2567
+            </div>
+        </div>
+
+        <div class="slideshow-container">
+            <div class="slideshow-container">
+                <div class="slide active">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/1402468a4d9300ea4.jpeg" alt="Our memories 1">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/20624bb8488cd987c.jpeg" alt="Our memories 2">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/3d2a63b736252ad51.jpeg" alt="Our memories 3">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/459171331fffbc1ed.jpeg" alt="Our memories 4">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/505a01dc50de8c2f4.jpeg" alt="Our memories 5">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/6bfe4218daf92b4ba.jpeg" alt="Our memories 6">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/73bec4540d5f08f95.jpeg" alt="Our memories 7">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/88fe0eea763d23d99.jpeg" alt="Our memories 8">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/9450e12f00b0c956c.jpeg" alt="Our memories 9">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/104d57e1967fcba43e.jpeg" alt="Our memories 10">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/11239aa7306c8b8f2f.jpeg" alt="Our memories 11">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/1288c05176479a8422.jpeg" alt="Our memories 12">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/1320ae715a3a7c3a62.jpeg" alt="Our memories 13">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/14a32759f4656af817.jpeg" alt="Our memories 14">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/15abc3fc1395ddfa90.jpeg" alt="Our memories 15">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/16d9a39b2fffb2c319.jpeg" alt="Our memories 16">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/17a4e1b067f5a987fc.jpeg" alt="Our memories 17">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/18bede0b94aecc99b3.jpeg" alt="Our memories 18">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/197e42c4fb4ed1a4e0.jpg" alt="Our memories 19">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/2093861e1e2aae5bf5.jpeg" alt="Our memories 20">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/21b3b1e1ec15ea3981.jpeg" alt="Our memories 21">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/222096b774c00ef658.jpeg" alt="Our memories 22">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/238fa085d83ca4dca6.jpeg" alt="Our memories 23">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/24023c3d799d9e7f97.jpeg" alt="Our memories 24">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/257cc2e86632f025d6.jpeg" alt="Our memories 25">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/263634b7e38c7ac442.jpeg" alt="Our memories 26">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/27706ccaf8a9e8996d.jpeg" alt="Our memories 27">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/2873c549171f798a58.jpeg" alt="Our memories 28">
+                </div>
+                <div class="slide">
+                    <img src="https://img5.pic.in.th/file/secure-sv1/29540203e99cb386e8.jpeg" alt="Our memories 29">
+                </div>
+                <div class="slide">
+                    <img src="https://img2.pic.in.th/pic/30ee684aa9ba650fa8.jpg" alt="Our memories 30">
+                </div>
+            </div>
+            <div class="slide-controls">
+                <button class="slide-btn" id="prevBtn">❮</button>
+                <button class="slide-btn" id="nextBtn">❯</button>
+            </div>
+        </div>
+
+        <div class="gift-section">
+            <h2 class="gift-title">✨ สุ่มของขวัญสุดพิเศษ ✨</h2>
+            <button class="gift-button" id="gift-button">🎁 กดเพื่อสุ่มของขวัญ</button>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced intro animation
+        function playIntroAnimation() {
+            const overlay = document.querySelector('.intro-overlay');
+            const introText = document.querySelector('.intro-text');
+            const messages = [
+                "อ้วนนนนนนนนนนนนนนนนนนนน",
+                "4 เดือนแล้วนะที่เรารักกัน",
+                "เค้าดีใจมากๆ เลยที่ได้อยู่กับอ้วนมา 4 เดือนแล้ว",
+                "มีความสุขมากๆ เลย อยากมีอ้วนแบบนี้ไปนานๆ",
+                "เดือนนี้เราปรับความเข้าใจกันไปเยอะมาก",
+                "รู้สึกดีฟุตๆ เลยย",
+                "แล้วก็มีอะไรจะบอกด้วย...",
+                "รักอ้วนมากๆ เลยค้าบบ 💘"
+            ];
+
+            let currentMessage = 0;
+
+            function showNextMessage() {
+                if (currentMessage < messages.length) {
+                    introText.style.opacity = '0';
+                    setTimeout(() => {
+                        introText.textContent = messages[currentMessage];
+                        introText.style.opacity = '1';
+                        currentMessage++;
+                        if (currentMessage < messages.length) {
+                            setTimeout(showNextMessage, 2000);
+                        } else {
+                            setTimeout(() => {
+                                overlay.classList.add('fade-out');
+                                setTimeout(() => {
+                                    overlay.style.display = 'none';
+                                }, 1000);
+                            }, 2000);
+                        }
+                    }, 1000);
+                }
+            }
+
+            setTimeout(() => {
+                introText.classList.add('show');
+                setTimeout(showNextMessage, 2000);
+            }, 500);
+        }
+
+        // Enhanced hearts animation
+        function createHearts() {
+            const heartsContainer = document.querySelector('.hearts');
+            const numberOfHearts = 30;
+            const heartSymbols = ['❤️', '💖', '💝', '💕', '💗'];
+
+            for (let i = 0; i < numberOfHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.animationDelay = `${Math.random() * 8}s`;
+                heart.style.fontSize = `${Math.random() * 20 + 15}px`;
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        // Enhanced time counter
+        function updateTimeCount() {
+            const startDate = new Date('2024-06-29T00:00:00');
+            const now = new Date();
+            const timeDiff = now - startDate;
+            
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            const timeCounter = document.getElementById('time-counter');
+            timeCounter.innerHTML = `
+                <span style="color: #db2777">${days}</span> วัน 
+                <span style="color: #db2777">${hours}</span> ชั่วโมง 
+                <span style="color: #db2777">${minutes}</span> นาที 
+                <span style="color: #db2777">${seconds}</span> วินาที 
+                <br>ที่เรารักกัน`;
+        }
+
+        // Enhanced slideshow
+        function setupSlideshow() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            let currentSlide = 0;
+            let autoSlideInterval;
+
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                slides[index].classList.add('active');
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            function startAutoSlide() {
+                autoSlideInterval = setInterval(nextSlide, 5000);
+            }
+
+            function stopAutoSlide() {
+                clearInterval(autoSlideInterval);
+            }
+
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                stopAutoSlide();
+                startAutoSlide();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                stopAutoSlide();
+                startAutoSlide();
+});
+
+// Touch controls for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+const slideshowContainer = document.querySelector('.slideshow-container');
+
+slideshowContainer.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    stopAutoSlide();
+});
+
+slideshowContainer.addEventListener('touchmove', (e) => {
+    touchEndX = e.touches[0].clientX;
+});
+
+slideshowContainer.addEventListener('touchend', () => {
+    const diffX = touchStartX - touchEndX;
+    if (Math.abs(diffX) > 50) { // minimum swipe distance
+        if (diffX > 0) {
+            nextSlide();
+        } else {
+            prevSlide();
+        }
+    }
+    startAutoSlide();
+});
+
+startAutoSlide();
+}
+
+// Enhanced gift system
+const gifts = [
+{
+    name: "บัตรหายงอนง๊อนๆๆๆ",
+    image: "https://cdn.discordapp.com/attachments/1115313546834739281/1300430993454272532/ddwd.png?ex=6720d03d&is=671f7ebd&hm=0a22c5752fb0519a3c7274e0957ce9c6438b2b6c9d0ce8eb7b9eba3056aa4b07&",
+    description: "ใช้บัตรนี้เมื่อหายงอน อ้วนต้องหายโกรธทันที! 💝"
+},
+{
+    name: "บัตรน้องโอเว่นห้ามร้อง",
+    image: "https://cdn.discordapp.com/attachments/1115313546834739281/1300432908070420500/2c292a9e96734739.png?ex=6720d206&is=671f8086&hm=b84c261122b0f66e68bb6161400239cc4667c099963e90f7516f7810031003ef&",
+    description: "ใช้บัตรนี้เมื่อน้องโอเว่นร้องไห้ ต้องหยุดร้องนะคะ! 🥺"
+},
+{
+    name: "เลี้ยงหนม 100 บาท",
+    image: "https://cdn.discordapp.com/attachments/1115313546834739281/1300444213888024577/5db543d6de808ff3.png?ex=6720dc8d&is=671f8b0d&hm=70a576461731a69db43e9cce3bf98f17bbdbacae099e33a2a9e6e210e0216600&",
+    description: "แลกบัตรนี้เพื่อรับขนมมูลค่า 100 บาท! 🍪"
+},
+{
+    name: "เลี้ยงหนม 200 บาท",
+    image: "https://cdn.discordapp.com/attachments/1115313546834739281/1300444213888024577/5db543d6de808ff3.png?ex=6720dc8d&is=671f8b0d&hm=70a576461731a69db43e9cce3bf98f17bbdbacae099e33a2a9e6e210e0216600&",
+    description: "แลกบัตรนี้เพื่อรับขนมมูลค่า 200 บาท! 🍰"
+},
+{
+    name: "เลี้ยงหนม 300 บาท",
+    image: "https://cdn.discordapp.com/attachments/1115313546834739281/1300444213888024577/5db543d6de808ff3.png?ex=6720dc8d&is=671f8b0d&hm=70a576461731a69db43e9cce3bf98f17bbdbacae099e33a2a9e6e210e0216600&",
+    description: "แลกบัตรนี้เพื่อรับขนมมูลค่า 300 บาท! 🎂"
+}
+];
+
+function setupGiftSystem() {
+const giftButton = document.getElementById('gift-button');
+const overlay = document.createElement('div');
+overlay.className = 'overlay';
+overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+`;
+document.body.appendChild(overlay);
+
+function showRandomGift() {
+    const randomGift = gifts[Math.floor(Math.random() * gifts.length)];
+    const popup = document.createElement('div');
+    popup.className = 'gift-popup';
+    popup.innerHTML = `
+        <div style="font-size: 2rem; margin-bottom: 1rem;">🎉 ยินดีด้วย!</div>
+        <div style="font-size: 1.8rem; color: #db2777; margin-bottom: 1.5rem;">${randomGift.name}</div>
+        <img src="${randomGift.image}" alt="Gift" style="width: 200px; height: 200px; object-fit: cover; border-radius: 1rem; margin: 1rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div style="color: #666; margin: 1rem 0;">${randomGift.description}</div>
+        <button class="gift-button" style="margin-top: 1rem;" onclick="this.closest('.overlay').style.display='none'">
+            สุ่มใหม่อีกครั้ง ✨
+        </button>
+    `;
+
+    overlay.innerHTML = '';
+    overlay.appendChild(popup);
+    overlay.style.display = 'flex';
+
+    // Add confetti effect
+    createConfetti();
+}
+
+function createConfetti() {
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: ${['#ff69b4', '#ff1493', '#db2777', '#ec4899'][Math.floor(Math.random() * 4)]};
+            transform: rotate(${Math.random() * 360}deg);
+            animation: confettiFall ${Math.random() * 2 + 1}s linear forwards;
+        `;
+        overlay.appendChild(confetti);
+    }
+}
+
+// Add confetti animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes confettiFall {
+        0% {
+            transform: translateY(-100vh) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+giftButton.addEventListener('click', showRandomGift);
+overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+        overlay.style.display = 'none';
+    }
+});
+}
+
+// Initialize everything
+window.addEventListener('load', () => {
+playIntroAnimation();
+createHearts();
+updateTimeCount();
+setInterval(updateTimeCount, 1000);
+setupSlideshow();
+setupGiftSystem();
+});
+</script>
+</body>
+</html>
